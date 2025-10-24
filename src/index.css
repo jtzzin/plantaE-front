@@ -1,0 +1,15 @@
+/* index.css - estilo base usando Tailwind (presume setup de Tailwind) */
+/* Caso não instale Tailwind, existem classes CSS já presentes inline. */
+/* Aqui só linka algumas regras básicas para fallback */
+html, body, #root { height: 100%; margin: 0; font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; background: linear-gradient(180deg, #f6fff6 0%, #ecf9ec 100%); }
+.container { max-width: 980px; margin: 24px auto; padding: 16px; }
+.header { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.card { background: white; border-radius: 12px; padding: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.06); }
+.button { background: #1b5e20; color: white; padding: 8px 12px; border-radius: 8px; border: none; cursor: pointer; }
+.button.secondary { background: transparent; color: #1b5e20; border: 1px solid #1b5e20; }
+.plant-list { display: grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 12px; margin-top: 12px; }
+.plant-item { padding: 12px; border-radius: 10px; background: linear-gradient(180deg,#e8f5e9, #ffffff); }
+.form-row { display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
+.input, textarea { padding:8px; border-radius:8px; border:1px solid #ddd; }
+.photo-thumb { width:100%; height:160px; object-fit:cover; border-radius:8px; }
+.link { color:#1b5e20; text-decoration:none; }

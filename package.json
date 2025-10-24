@@ -1,0 +1,14 @@
+{
+  "name": "plantae-frontend",
+  "private": true,
+  "dependencies": {
+    "react": "18.x",
+    "react-dom": "18.x",
+    "react-router-dom": "6.x",
+    "axios": "1.x"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  }
+}
