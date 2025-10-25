@@ -16,9 +16,18 @@ export default function Login() {
 
     try {
       const data = await login(username, password)
+      
+      // ===== VERIFICAÇÃO SE O TOKEN EXISTE =====
+      if (!data.access_token) {
+        throw new Error(data.msg || 'Erro ao fazer login')
+      }
+      
       localStorage.setItem('token', data.access_token)
+      console.log('✅ Token salvo:', data.access_token) // DEBUG
       navigate('/dashboard')
+      
     } catch (err) {
+      console.error('❌ Erro no login:', err)
       setError('❌ Usuário ou senha incorretos')
     } finally {
       setLoading(false)
@@ -27,18 +36,14 @@ export default function Login() {
 
   return (
     <div className="auth-container">
-      {/* CARD DE LOGIN */}
       <div className="auth-card">
-        {/* LOGO/HEADER */}
         <div className="auth-header">
           <div className="auth-logo">🌿</div>
           <h1 className="auth-title">PlantaE</h1>
           <p className="auth-subtitle">Gerencie suas plantas com carinho</p>
         </div>
 
-        {/* FORMULÁRIO */}
         <form onSubmit={handleSubmit} className="auth-form">
-          {/* USUÁRIO */}
           <div className="form-group">
             <label>👤 Usuário</label>
             <input
@@ -52,7 +57,6 @@ export default function Login() {
             />
           </div>
 
-          {/* SENHA */}
           <div className="form-group">
             <label>🔒 Senha</label>
             <input
@@ -65,14 +69,12 @@ export default function Login() {
             />
           </div>
 
-          {/* MENSAGEM DE ERRO */}
           {error && (
             <div className="auth-error">
               {error}
             </div>
           )}
 
-          {/* BOTÃO ENTRAR */}
           <button
             type="submit"
             className="btn btn-primary btn-auth"
@@ -82,7 +84,6 @@ export default function Login() {
           </button>
         </form>
 
-        {/* LINK PARA REGISTRO */}
         <div className="auth-footer">
           <p>Não tem uma conta?</p>
           <button
@@ -94,7 +95,6 @@ export default function Login() {
         </div>
       </div>
 
-      {/* DECORAÇÃO DE FUNDO */}
       <div className="auth-decoration auth-decoration-1">🌱</div>
       <div className="auth-decoration auth-decoration-2">🍃</div>
       <div className="auth-decoration auth-decoration-3">🌿</div>
