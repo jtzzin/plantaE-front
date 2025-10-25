@@ -1,153 +1,117 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { register } from '../api'
 
 export default function Register() {
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [error, setError] = useState(null)
-  const [success, setSuccess] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   async function handleSubmit(e) {
     e.preventDefault()
-    setError(null)
-
-    // Validação de senhas
-    if (password !== confirmPassword) {
-      setError('❌ As senhas não coincidem')
-      return
-    }
-
-    if (password.length < 4) {
-      setError('❌ A senha deve ter pelo menos 4 caracteres')
-      return
-    }
-
+    setError('')
     setLoading(true)
 
     try {
-      await register(username, password)
-      setSuccess(true)
-      setTimeout(() => {
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        alert('✅ Conta criada com sucesso! Faça login.')
         navigate('/login')
-      }, 2000)
+      } else {
+        setError(data.error || 'Erro ao criar conta')
+      }
     } catch (err) {
-      setError('❌ Erro ao criar conta. Usuário já existe?')
+      console.error('❌ Erro no registro:', err)
+      setError('Erro ao conectar com o servidor')
     } finally {
       setLoading(false)
     }
   }
 
-  if (success) {
-    return (
-      <div className="auth-container">
-        <div className="auth-card">
-          <div className="auth-header">
-            <div className="auth-logo">🎉</div>
-            <h1 className="auth-title">Conta Criada!</h1>
-            <p className="auth-subtitle">Redirecionando para o login...</p>
-          </div>
-          <div className="badge badge-success" style={{ fontSize: '16px', padding: '16px' }}>
-            ✅ Cadastro realizado com sucesso!
-          </div>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="auth-container">
-      {/* CARD DE REGISTRO */}
+      <div className="auth-decoration auth-decoration-1">🌿</div>
+      <div className="auth-decoration auth-decoration-2">🌱</div>
+      <div className="auth-decoration auth-decoration-3">🍀</div>
+      <div className="auth-decoration auth-decoration-4">🌳</div>
+
       <div className="auth-card">
-        {/* LOGO/HEADER */}
         <div className="auth-header">
-          <div className="auth-logo">🌱</div>
-          <h1 className="auth-title">Criar Conta</h1>
-          <p className="auth-subtitle">Junte-se à comunidade PlantaE</p>
+          <div className="auth-logo">🌿</div>
+          <h1 className="auth-title">PlantaE</h1>
+          <p className="auth-subtitle">Crie sua conta</p>
         </div>
 
-        {/* FORMULÁRIO */}
         <form onSubmit={handleSubmit} className="auth-form">
-          {/* USUÁRIO */}
+          {error && (
+            <div className="auth-error">
+              ⚠️ {error}
+            </div>
+          )}
+
           <div className="form-group">
             <label>👤 Usuário</label>
             <input
               type="text"
               className="form-control"
+              placeholder="Escolha um usuário"
               value={username}
-              onChange={e => setUsername(e.target.value)}
-              placeholder="Escolha um nome de usuário"
+              onChange={(e) => setUsername(e.target.value)}
               required
               autoFocus
-              minLength="3"
             />
           </div>
 
-          {/* SENHA */}
           <div className="form-group">
             <label>🔒 Senha</label>
-            <input
-              type="password"
-              className="form-control"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="Escolha uma senha segura"
-              required
-              minLength="4"
-            />
-          </div>
-
-          {/* CONFIRMAR SENHA */}
-          <div className="form-group">
-            <label>🔒 Confirmar Senha</label>
-            <input
-              type="password"
-              className="form-control"
-              value={confirmPassword}
-              onChange={e => setConfirmPassword(e.target.value)}
-              placeholder="Digite a senha novamente"
-              required
-              minLength="4"
-            />
-          </div>
-
-          {/* MENSAGEM DE ERRO */}
-          {error && (
-            <div className="auth-error">
-              {error}
+            <div className="password-input-wrapper">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                className="form-control"
+                placeholder="Escolha uma senha"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="button"
+                className="btn-toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? 'Ocultar senha' : 'Mostrar senha'}
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </button>
             </div>
-          )}
+          </div>
 
-          {/* BOTÃO CRIAR CONTA */}
           <button
             type="submit"
             className="btn btn-primary btn-auth"
             disabled={loading}
           >
-            {loading ? '⏳ Criando conta...' : '🚀 Criar Conta'}
+            {loading ? '⏳ Criando conta...' : '📝 Criar conta'}
           </button>
         </form>
 
-        {/* LINK PARA LOGIN */}
         <div className="auth-footer">
           <p>Já tem uma conta?</p>
           <button
             className="btn btn-secondary"
             onClick={() => navigate('/login')}
           >
-            🔑 Fazer Login
+            🚀 Entrar
           </button>
         </div>
       </div>
-
-      {/* DECORAÇÃO DE FUNDO */}
-      <div className="auth-decoration auth-decoration-1">🌱</div>
-      <div className="auth-decoration auth-decoration-2">🍃</div>
-      <div className="auth-decoration auth-decoration-3">🌿</div>
-      <div className="auth-decoration auth-decoration-4">🪴</div>
     </div>
   )
 }

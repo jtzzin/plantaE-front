@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import ThemeToggle from '../components/ThemeToggle'
 
 export default function Dashboard() {
   const navigate = useNavigate()
   const [plants, setPlants] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // ===== BUSCAR PLANTAS =====
+  // Buscar plantas
   async function fetchPlants() {
     try {
       const token = localStorage.getItem('token')
@@ -18,7 +19,7 @@ export default function Dashboard() {
       
       if (response.ok) {
         const data = await response.json()
-        console.log('✅ Plantas recebidas:', data) // DEBUG
+        console.log('✅ Plantas recebidas:', data)
         setPlants(data)
       }
     } catch (err) {
@@ -28,12 +29,39 @@ export default function Dashboard() {
     }
   }
 
-  // ===== CARREGAR PLANTAS AO ENTRAR =====
+  // Deletar planta
+  async function handleDelete(plantId, plantName, e) {
+    e.stopPropagation()
+    
+    if (!window.confirm(`Tem certeza que deseja excluir "${plantName}"?`)) {
+      return
+    }
+
+    try {
+      const token = localStorage.getItem('token')
+      const response = await fetch(`http://localhost:5000/api/plants/${plantId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      if (response.ok) {
+        setPlants(plants.filter(p => p._id !== plantId))
+        console.log('✅ Planta excluída!')
+      } else {
+        alert('❌ Erro ao excluir planta')
+      }
+    } catch (err) {
+      console.error('❌ Erro ao excluir:', err)
+      alert('❌ Erro ao excluir planta')
+    }
+  }
+
   useEffect(() => {
     fetchPlants()
   }, [])
 
-  // ===== SAIR =====
   function handleLogout() {
     localStorage.removeItem('token')
     navigate('/login')
@@ -41,10 +69,10 @@ export default function Dashboard() {
 
   return (
     <div className="app-container">
-      {/* HEADER */}
       <header>
         <h1>🌿 PlantaE</h1>
-        <div style={{ display: 'flex', gap: '12px' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <ThemeToggle />
           <button 
             className="btn btn-primary"
             onClick={() => navigate('/plant/new')}
@@ -60,7 +88,6 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {/* CONTEÚDO */}
       <div className="card">
         <h2>🪴 Minhas Plantas</h2>
 
@@ -86,7 +113,6 @@ export default function Dashboard() {
               <div 
                 key={plant._id} 
                 className="plant-card"
-                onClick={() => navigate(`/plant/${plant._id}`)}
               >
                 <div className="plant-card-header">
                   <h3>{plant.name}</h3>
@@ -102,6 +128,33 @@ export default function Dashboard() {
                     <small>Última rega: {new Date(plant.last_watered).toLocaleDateString()}</small>
                   </div>
                 )}
+
+                <div className="plant-actions">
+                  <button 
+                    className="btn-action btn-action-view"
+                    onClick={() => navigate(`/plant/${plant._id}`)}
+                    title="Ver detalhes"
+                  >
+                    👁️ Ver
+                  </button>
+                  <button 
+                    className="btn-action btn-action-edit"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      navigate(`/plant/edit/${plant._id}`)
+                    }}
+                    title="Editar"
+                  >
+                    ✏️ Editar
+                  </button>
+                  <button 
+                    className="btn-action btn-action-delete"
+                    onClick={(e) => handleDelete(plant._id, plant.name, e)}
+                    title="Excluir"
+                  >
+                    🗑️ Excluir
+                  </button>
+                </div>
               </div>
             ))}
           </div>
