@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { z } from 'zod'
+
+// Esquema de validação Zod para o registro
+const schema = z.object({
+  username: z.string().min(3, 'Usuário muito curto').max(30, 'Usuário muito longo'),
+  password: z.string().min(5, 'Senha muito curta').max(32, 'Senha muito longa'),
+})
 
 export default function Register() {
   const navigate = useNavigate()
@@ -14,11 +21,19 @@ export default function Register() {
     setError('')
     setLoading(true)
 
+    // Validação Zod antes de chamar backend
+    const validate = schema.safeParse({ username, password })
+    if (!validate.success) {
+      setError(validate.error.issues[0].message)
+      setLoading(false)
+      return
+    }
+
     try {
       const response = await fetch('http://localhost:5000/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
+        body: JSON.stringify({ username, password }),
       })
 
       const data = await response.json()
@@ -27,10 +42,9 @@ export default function Register() {
         alert('✅ Conta criada com sucesso! Faça login.')
         navigate('/login')
       } else {
-        setError(data.error || 'Erro ao criar conta')
+        setError(data.msg || 'Erro ao criar conta')
       }
     } catch (err) {
-      console.error('❌ Erro no registro:', err)
       setError('Erro ao conectar com o servidor')
     } finally {
       setLoading(false)

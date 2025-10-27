@@ -1,5 +1,12 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { z } from 'zod'
+
+// Esquema de validação Zod
+const schema = z.object({
+  username: z.string().min(3, 'Usuário muito curto').max(30, 'Usuário muito longo'),
+  password: z.string().min(5, 'Senha muito curta').max(32, 'Senha muito longa'),
+})
 
 export default function Login() {
   const navigate = useNavigate()
@@ -14,26 +21,29 @@ export default function Login() {
     setError('')
     setLoading(true)
 
+    // Validação Zod antes de chamar o backend
+    const validate = schema.safeParse({ username, password })
+    if (!validate.success) {
+      setError(validate.error.issues[0].message)
+      setLoading(false)
+      return
+    }
+
     try {
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       })
-
       const data = await response.json()
-
       if (!data.access_token) {
         throw new Error(data.msg || 'Erro ao fazer login')
       }
-
       localStorage.setItem('token', data.access_token)
-      console.log('✅ Token salvo:', data.access_token)
       navigate('/dashboard')
 
     } catch (err) {
-      console.error('❌ Erro no login:', err)
-      setError('❌ Usuário ou senha incorretos')
+      setError('Usuário ou senha incorretos')
     } finally {
       setLoading(false)
     }
