@@ -1,3 +1,4 @@
+// importações necessarias
 import React, { useEffect, useState } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './pages/Login'
@@ -5,6 +6,7 @@ import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
 import PlantDetails from './pages/PlantDetails'
 import NewPlant from './pages/NewPlant' 
+import EditPlant from './pages/EditPlant'
 import './index.css'
 
 // ProtectedRoute impede acesso sem login
@@ -74,6 +76,18 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
+
+          <Route 
+            path="/plant/:id/edit"
+            element={
+              <ProtectedRoute>
+               <EditPlant />
+            </ProtectedRoute>
+            }
+          />
+
+
+
           <Route 
             path="/plant/new" 
             element={

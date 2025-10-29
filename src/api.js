@@ -22,6 +22,21 @@ export async function register(username, password){
   return res.json()
 }
 
+// atualiza dados da planta
+// Atualiza dados da planta (PUT)
+export async function updatePlant(id, data){
+  const token = localStorage.getItem('token')
+  const res = await fetch(`${API}/plants/${id}`, {
+    method: 'PUT',
+    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  })
+  return res.json()
+}
+
+
+
+
 function authHeaders(){
   const t = localStorage.getItem('token')
   return { 'Authorization': `Bearer ${t}` }

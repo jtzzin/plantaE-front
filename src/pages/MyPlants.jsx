@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Componente da tela de listagem, busca e filtro das plantas do usuário
 export default function MinhasPlantas({ token }) {
@@ -9,6 +10,8 @@ export default function MinhasPlantas({ token }) {
   const [dir, setDir] = useState("asc");
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
+
+  const navigate = useNavigate();
 
   // Carrega todas as plantas ao abrir a página
   useEffect(() => {
@@ -149,9 +152,14 @@ export default function MinhasPlantas({ token }) {
                   ? new Date(planta.last_watered).toLocaleString()
                   : "nunca"}
               </div>
-              <button onClick={() => regarPlanta(planta._id)}>Regar agora</button>
+              <button onClick={() => regarPlanta(planta._id)}>
+                Regar agora
+              </button>
               <button onClick={() => excluirPlanta(planta._id)}>
                 Excluir
+              </button>
+              <button onClick={() => navigate(`/plant/${planta._id}/edit`)} style={{ marginLeft: 8 }}>
+                Editar
               </button>
             </div>
           ))
