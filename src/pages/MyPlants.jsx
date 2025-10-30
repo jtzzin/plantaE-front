@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Componente da tela de listagem, busca e filtro das plantas do usuário
 export default function MinhasPlantas({ token }) {
@@ -10,12 +11,13 @@ export default function MinhasPlantas({ token }) {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState("");
 
+  const navigate = useNavigate();
+
   // Carrega todas as plantas ao abrir a página
   useEffect(() => {
     carregarPlantas();
   }, []);
 
-  // Busca geral de todas as plantas
   function carregarPlantas() {
     setLoading(true);
     fetch("/api/plants/", {
@@ -28,7 +30,6 @@ export default function MinhasPlantas({ token }) {
       });
   }
 
-  // Busca específica pelo nome
   function buscarPlantas() {
     setLoading(true);
     fetch(`/api/plants/search?nome=${busca}`, {
@@ -41,7 +42,6 @@ export default function MinhasPlantas({ token }) {
       });
   }
 
-  // Ordena a lista de plantas conforme filtros do usuário
   function ordenarPlantas() {
     setLoading(true);
     fetch(`/api/plants/filter?order=${ordem}&dir=${dir}`, {
@@ -54,7 +54,6 @@ export default function MinhasPlantas({ token }) {
       });
   }
 
-  // Registra rega na planta marcada pelo usuário
   function regarPlanta(id) {
     fetch(`/api/plants/${id}/water`, {
       method: "POST",
@@ -67,7 +66,6 @@ export default function MinhasPlantas({ token }) {
       });
   }
 
-  // Exclui uma planta do banco pelo ID
   function excluirPlanta(id) {
     fetch(`/api/plants/${id}`, {
       method: "DELETE",
@@ -80,7 +78,6 @@ export default function MinhasPlantas({ token }) {
       });
   }
 
-  // Renderização do componente completo
   return (
     <div>
       <h2>Minhas Plantas</h2>
@@ -103,10 +100,10 @@ export default function MinhasPlantas({ token }) {
         </select>
         <button onClick={ordenarPlantas}>Ordenar</button>
       </div>
-      {/* Feedbacks visuais */}
       {loading && <div>Carregando...</div>}
       {msg && <div style={{ color: "green" }}>{msg}</div>}
-      {/* Lista em grid de cards das plantas */}
+
+      {/* Cards das plantas */}
       <div
         style={{
           display: "flex",
@@ -150,10 +147,9 @@ export default function MinhasPlantas({ token }) {
                   : "nunca"}
               </div>
               <button onClick={() => regarPlanta(planta._id)}>Regar agora</button>
-              <button onClick={() => excluirPlanta(planta._id)}>
-                Excluir
-              </button>
-            </div>
+              <button onClick={() => excluirPlanta(planta._id)}>Excluir</button>
+              <button onClick={() => navigate(`/plant/${planta._id}/edit`)} style={{ marginLeft: 8 }}> Editar</button>
+              </div>
           ))
         )}
       </div>
