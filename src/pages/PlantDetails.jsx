@@ -14,7 +14,7 @@ function formatDateTime(iso) {
   })
 }
 
-// Helper: para o cronograma
+// Função utilitária para cronograma previsto
 function calcularProximasRegas(base, intervalo, count = 5) {
   const datas = []
   if (!base || !intervalo) return datas
@@ -25,12 +25,6 @@ function calcularProximasRegas(base, intervalo, count = 5) {
   }
   return datas
 }
-function datasIguais(d1, d2) {
-  const a = new Date(d1), b = new Date(d2)
-  return a.getFullYear() === b.getFullYear() &&
-    a.getMonth() === b.getMonth() &&
-    a.getDate() === b.getDate()
-}
 
 export default function PlantDetails() {
   const navigate = useNavigate()
@@ -39,7 +33,6 @@ export default function PlantDetails() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [uploading, setUploading] = useState(false)
-  const [feitoRegas, setFeitoRegas] = useState([])
 
   async function load() {
     try {
@@ -58,26 +51,6 @@ export default function PlantDetails() {
     try {
       await waterPlant(id)
       await load()
-      // Lógica do cronograma: marca feito localmente
-      if (plant) {
-        const intervalo = plant.water_interval_days ?? plant.waterintervaldays ?? 7
-        const history = (plant.water_history || [])
-          .map((r) => ({ ...r, d: new Date(r.at) }))
-          .sort((a, b) => b.d - a.d)
-        const ultimaReal = history[0] ? history[0].at : (plant.last_watered ?? plant.lastwatered)
-        const base = ultimaReal || (plant.water_history && plant.water_history[0]?.at)
-        const proximas = calcularProximasRegas(base, intervalo, 5)
-        for (let idx = 0; idx < proximas.length; idx++) {
-          if (!feitoRegas[idx]) {
-            // Marcar "feito" neste
-            setFeitoRegas([...feitoRegas, {
-              feito: new Date().toISOString(),
-              previsto: proximas[idx].toISOString(),
-            }])
-            break
-          }
-        }
-      }
     } catch {
       alert('Falha ao marcar rega')
     }
@@ -132,17 +105,13 @@ export default function PlantDetails() {
     )
   }
 
-  // Cronograma local
+  // Define base do cronograma pelo histórico mais recente ou first_watered
   const intervalo = plant.water_interval_days ?? plant.waterintervaldays ?? 7
-  const history = (plant.water_history || [])
-    .map((r) => ({ ...r, d: new Date(r.at) }))
+  const history = (plant.water_history || []).map((r) => ({ ...r, d: new Date(r.at) }))
     .sort((a, b) => b.d - a.d)
   const ultimaReal = history[0] ? history[0].at : (plant.last_watered ?? plant.lastwatered)
   const base = ultimaReal || (plant.water_history && plant.water_history[0]?.at)
   const proximas = calcularProximasRegas(base, intervalo, 5)
-  function getFeito(idx) {
-    return feitoRegas[idx] || null
-  }
 
   return (
     <div className="app-container">
@@ -185,35 +154,11 @@ export default function PlantDetails() {
         <hr style={{ margin: '32px 0 16px 0', border: 0, borderTop: '1px solid var(--color-border)' }} />
 
         <div>
-          <h3 style={{ marginBottom: 8 }}>🗓️ Cronograma previsto</h3>
+          <h3 style={{ marginBottom: 8 }}>📅 Cronograma previsto</h3>
           <ul>
-            {proximas.map((dt, idx) => {
-              const previstoISO = dt.toISOString()
-              const feitoObj = getFeito(idx)
-              const real = history.find((r) => datasIguais(r.at, previstoISO))
-              let isFeito = !!feitoObj
-              let isAdiantado = false
-              let diaReal = null
-              if (!feitoObj && real) {
-                isFeito = true
-                if (!datasIguais(real.at, previstoISO)) {
-                  isAdiantado = true
-                  diaReal = formatDateTime(real.at)
-                }
-              }
-              return (
-                <li key={idx}>
-                  {formatDateTime(previstoISO)}{" "}
-                  {isFeito || isAdiantado ? (
-                    isAdiantado || (feitoObj && !datasIguais(feitoObj.feito, previstoISO)) ? (
-                      <>✅ <span style={{ fontSize: 13 }}>({diaReal || formatDateTime(feitoObj.feito)})</span></>
-                    ) : (
-                      <span>✅</span>
-                    )
-                  ) : <></>}
-                </li>
-              )
-            })}
+            {proximas.map((dt, idx) => (
+              <li key={idx}>{formatDateTime(dt)}</li>
+            ))}
           </ul>
         </div>
 

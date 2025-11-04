@@ -1,38 +1,39 @@
-// frontend/src/api.js
 const API = process.env.REACT_APP_API_URL || 'http://localhost:5000/api'
 
-export async function login(username, password){
+export async function login(username, password) {
   const res = await fetch(`${API}/auth/login`, {
-    method: 'POST', headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({username, password})
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
   })
   return res.json()
 }
 
-export async function register(username, password){
+export async function register(username, password) {
   const res = await fetch(`${API}/auth/register`, {
-    method: 'POST', headers:{'Content-Type':'application/json'},
-    body: JSON.stringify({username, password})
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
   })
   return res.json()
 }
 
-function authHeader(){
+function authHeader() {
   const t = localStorage.getItem('token')
   return { Authorization: `Bearer ${t}` }
 }
 
-export async function listPlants(){
+export async function listPlants() {
   const res = await fetch(`${API}/plants/`, { headers: { ...authHeader() } })
   return res.json()
 }
 
-export async function getPlant(id){
+export async function getPlant(id) {
   const res = await fetch(`${API}/plants/${id}`, { headers: { ...authHeader() } })
   return res.json()
 }
 
-export async function createPlant(form){
+export async function createPlant(form) {
   const fd = new FormData()
   Object.keys(form).forEach((k) => fd.append(k, form[k]))
   const res = await fetch(`${API}/plants/`, {
@@ -49,7 +50,7 @@ export async function createPlant(form){
   return data
 }
 
-export async function updatePlant(id, form){
+export async function updatePlant(id, form) {
   const fd = new FormData()
   Object.keys(form).forEach((k) => { if (form[k] !== undefined && form[k] !== null) fd.append(k, form[k]) })
   const res = await fetch(`${API}/plants/${id}`, {
@@ -66,17 +67,25 @@ export async function updatePlant(id, form){
   return data
 }
 
-export async function deletePlant(id){
+export async function deletePlant(id) {
   const res = await fetch(`${API}/plants/${id}`, { method: 'DELETE', headers: { ...authHeader() } })
   return res.json()
 }
 
-export async function waterPlant(id){
+export async function restorePlant(id) {
+  const res = await fetch(
+    `${API}/plants/${id}/restore`,
+    { method: "POST", headers: { ...authHeader() } }
+  );
+  return res.json();
+}
+
+export async function waterPlant(id) {
   const res = await fetch(`${API}/plants/${id}/water`, { method: 'POST', headers: { ...authHeader() } })
   return res.json()
 }
 
-export async function uploadPhoto(id, file){
+export async function uploadPhoto(id, file) {
   const fd = new FormData()
   fd.append('photo', file)
   const res = await fetch(`${API}/plants/${id}/upload`, {
@@ -87,7 +96,7 @@ export async function uploadPhoto(id, file){
   return res.json()
 }
 
-export async function listActivities({ plantId, day } = {}){
+export async function listActivities({ plantId, day } = {}) {
   const qs = new URLSearchParams()
   if (plantId) qs.set('plant_id', plantId)
   if (day) qs.set('day', day)

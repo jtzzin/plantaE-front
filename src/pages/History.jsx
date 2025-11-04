@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { listActivities, listPlants } from '../api'
+import { listActivities, listPlants, restorePlant } from '../api'
 
 function formatDateTime(iso) {
   if (!iso) return ''
@@ -15,14 +15,15 @@ function formatDateTime(iso) {
 }
 
 function iconFor(action) {
+  if (action === 'restore') return '♻️'
   if (action === 'create') return '➕'
   if (action === 'delete') return '🗑️'
   if (action === 'water')  return '💧'
   if (action === 'update') return '✏️'
   return '🗒️'
 }
-
 function describe(action) {
+  if (action === 'restore') return 'Planta restaurada'
   if (action === 'create') return 'Planta cadastrada'
   if (action === 'delete') return 'Planta excluída'
   if (action === 'water')  return 'Planta regada'
@@ -34,7 +35,6 @@ function renderChanges(extra) {
   const changes = extra?.changes
   const photoChanged = extra?.photo_changed
   if ((!changes || changes.length === 0) && !photoChanged) return null
-
   const labels = {
     name: 'Nome',
     water_interval_days: 'Intervalo de rega (dias)',
@@ -60,31 +60,31 @@ export default function History() {
   const navigate = useNavigate()
   const [plants, setPlants] = useState([])
   const [activities, setActivities] = useState([])
+  const [allActivities, setAllActivities] = useState([])
   const [loading, setLoading] = useState(true)
   const [plantId, setPlantId] = useState('')
   const [day, setDay] = useState('')
-  const [loadedPlants, setLoadedPlants] = useState(false)
+  const [restoringId, setRestoringId] = useState(null)
 
-  const plantMap = useMemo(() => {
-    const m = new Map()
-    plants && plants.forEach && plants.forEach(p => m.set(p._id || p.id, p.name))
-    return m
-  }, [plants])
+  // Captura todas as atividades (sem filtro) apenas para montar as opções de filtro
+  useEffect(() => {
+    async function fetchAll() {
+      const acts = await listActivities() || []
+      setAllActivities(Array.isArray(acts) ? acts : [])
+    }
+    fetchAll()
+  }, [])
 
+  // Carrega só as atividades realmente filtradas para a exibição
   useEffect(() => {
     let active = true
     async function run() {
       setLoading(true)
-      let ps = plants && plants.forEach ? plants : []
-      if (!loadedPlants) {
-        try {
-          ps = await listPlants() || []
-          if (active) {
-            setPlants(ps)
-            setLoadedPlants(true)
-          }
-        } catch {}
-      }
+      try {
+        // lista de plantas só para complemento de nomes
+        const ps = await listPlants() || []
+        if (active) setPlants(ps)
+      } catch {}
       try {
         const acts = await listActivities({ plantId: plantId || undefined, day: day || undefined }) || []
         if (active) setActivities(Array.isArray(acts) ? acts : [])
@@ -93,7 +93,29 @@ export default function History() {
     }
     run()
     return () => { active = false }
-  }, [plantId, day, loadedPlants])
+  }, [plantId, day, restoringId])
+
+  // Todas as opções de plantas para o filtro (ativas OU com qualquer atividade registrada)
+  const plantOptions = useMemo(() => {
+    const ids = new Set()
+    const items = []
+    // Opções de todas as atividades, mesmo de plantas deletadas/restauradas
+    allActivities.forEach(a => {
+      if (!ids.has(a.plant_id) && a.plant_id) {
+        ids.add(a.plant_id)
+        items.push({ id: a.plant_id, name: a.plant_name || "Planta" })
+      }
+    })
+    // Também inclui plantas ativas (sem repeti-las)
+    plants.forEach(p => {
+      const pid = p._id || p.id
+      if (!ids.has(pid)) {
+        ids.add(pid)
+        items.push({ id: pid, name: p.name })
+      }
+    })
+    return items
+  }, [allActivities, plants])
 
   return (
     <div className="app-container">
@@ -108,10 +130,14 @@ export default function History() {
         <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', marginBottom: 16 }}>
           <div className="form-group" style={{ minWidth: 220 }}>
             <label>Filtrar por planta</label>
-            <select className="form-control" value={plantId} onChange={(e) => setPlantId(e.target.value)}>
+            <select
+              className="form-control"
+              value={plantId}
+              onChange={(e) => setPlantId(e.target.value)}
+            >
               <option value="">Todas</option>
-              {(plants || []).map((p) => (
-                <option key={p._id || p.id} value={p._id || p.id}>{p.name}</option>
+              {plantOptions.map((p) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
               ))}
             </select>
           </div>
@@ -124,32 +150,43 @@ export default function History() {
           </div>
         </div>
         {loading ? (
-          <div style={{ textAlign: 'center', padding: 40 }}>
-            <p>Carregando histórico...</p>
-          </div>
+          <div style={{ textAlign: 'center', padding: 40 }}><p>Carregando histórico...</p></div>
         ) : (activities?.length ?? 0) === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">🗒️</div>
             <h3>Nenhuma movimentação</h3>
-            <p>Aqui aparecerão inclusões, edições, exclusões e regas realizadas.</p>
+            <p>Aqui aparecerão inclusões, edições, exclusões, regas e restaurações realizadas.</p>
           </div>
         ) : (
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
             {activities.map((a) => {
-              // Para 'create', mostra o horário real da primeira rega salvo no extra
               const dateToShow = a.action === 'create' && a.extra?.first_watered ? a.extra.first_watered : a.at
               return (
-                <li key={a._id} style={{ borderBottom: '1px solid var(--color-border)', padding: '12px 4px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-                    <div>
-                      <span style={{ marginRight: 8 }}>{iconFor(a.action)}</span>
-                      <strong>{describe(a.action)}</strong> — {a.plant_name || plantMap.get(a.plant_id) || 'Planta'}
-                      {a.action === 'update' && renderChanges(a.extra)}
-                    </div>
-                    <div style={{ color: 'var(--color-text-secondary)' }}>
-                      {formatDateTime(dateToShow)}
-                    </div>
+                <li key={a._id} style={{ borderBottom: '1px solid var(--color-border)', padding: '12px 4px', display: 'flex', alignItems: 'center', flexWrap: 'wrap' }}>
+                  <div style={{ flex: 1 }}>
+                    <span style={{ marginRight: 8 }}>{iconFor(a.action)}</span>
+                    <strong>{describe(a.action)}</strong>
+                    {" — "}
+                    {a.plant_name || "Planta"}
+                    {a.action === 'update' && renderChanges(a.extra)}
                   </div>
+                  <div style={{ color: 'var(--color-text-secondary)', marginRight: 14 }}>
+                    {formatDateTime(dateToShow)}
+                  </div>
+                  {a.action === "delete" && (
+                    <button
+                      className="btn btn-secondary"
+                      style={{ marginLeft: 8, fontSize: 14 }}
+                      disabled={restoringId === a.plant_id}
+                      onClick={async () => {
+                        setRestoringId(a.plant_id)
+                        await restorePlant(a.plant_id)
+                        setRestoringId(null)
+                      }}
+                    >
+                      ♻️ Restaurar
+                    </button>
+                  )}
                 </li>
               )
             })}
