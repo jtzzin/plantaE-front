@@ -29,6 +29,7 @@ export default function Register() {
       return
     }
 
+    // Linkando a api hospedada no render
     try {
       const response = await fetch('https://plantae-backend-g2kc.onrender.com/api/auth/register', {
         method: 'POST',
@@ -39,7 +40,7 @@ export default function Register() {
       const data = await response.json()
 
       if (response.ok) {
-        alert('✅ Conta criada com sucesso! Faça login.')
+        alert(' Conta criada com sucesso! Faça login.')
         navigate('/login')
       } else {
         setError(data.msg || 'Erro ao criar conta')
