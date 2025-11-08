@@ -145,7 +145,7 @@ export default function PlantDetails() {
           <div style={{ marginTop: 20 }}>
             <img
               alt="Foto da planta"
-              src={`http://localhost:5000/api/plants/photo/${plant.photo}`}
+              src={`https://plantae-backend-g2kc.onrender.com/api/plants/photo/${plant.photo}`}
               style={{ maxWidth: '100%', borderRadius: 8 }}
             />
           </div>

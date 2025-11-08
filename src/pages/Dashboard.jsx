@@ -23,7 +23,7 @@ export default function Dashboard() {
   async function fetchPlants() {
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch('http://localhost:5000/api/plants/', {
+      const response = await fetch('https://plantae-backend-g2kc.onrender.com/api/plants/', {
         headers: { Authorization: `Bearer ${token}` }
       })
       if (response.ok) {
@@ -42,7 +42,7 @@ export default function Dashboard() {
     if (!window.confirm(`Tem certeza que deseja excluir ${plantName}?`)) return
     try {
       const token = localStorage.getItem('token')
-      const response = await fetch(`http://localhost:5000/api/plants/${plantId}`, {
+      const response = await fetch(`https://plantae-backend-g2kc.onrender.com/api/plants/${plantId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       })
