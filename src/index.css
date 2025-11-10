@@ -1,29 +1,35 @@
 :root {
-  /* Primitive Color Tokens */
-  --color-white: rgba(255, 255, 255, 1);
-  --color-black: rgba(0, 0, 0, 1);
-  --color-cream-50: rgba(252, 252, 249, 1);
-  --color-cream-100: rgba(255, 255, 253, 1);
+  /* ---------- Tokens primitivos: cores básicas ----------
+     Definem cores "atômicas" usadas para criar tokens semânticos abaixo.
+     Alterar aqui impacta toda a paleta 
+  */
+  --color-white: rgba(255, 255, 255, 1); /* branco */
+  --color-black: rgba(0, 0, 0, 1); /* preto */
+  --color-cream-50: rgba(252, 252, 249, 1); /* fundo claro */
+  --color-cream-100: rgba(255, 255, 253, 1); /* superfície clara */
   --color-gray-200: rgba(245, 245, 245, 1);
   --color-gray-300: rgba(167, 169, 169, 1);
   --color-gray-400: rgba(119, 124, 124, 1);
   --color-slate-500: rgba(98, 108, 113, 1);
-  --color-brown-600: rgba(94, 82, 64, 1);
+  --color-brown-600: rgba(94, 82, 64, 1); /* usado para bordas/çecundários */
   --color-charcoal-700: rgba(31, 33, 33, 1);
   --color-charcoal-800: rgba(38, 40, 40, 1);
-  --color-slate-900: rgba(19, 52, 59, 1);
+  --color-slate-900: rgba(19, 52, 59, 1); /* texto principal (modo claro) */
   --color-teal-300: rgba(50, 184, 198, 1);
   --color-teal-400: rgba(45, 166, 178, 1);
-  --color-teal-500: rgba(33, 128, 141, 1);
+  --color-teal-500: rgba(33, 128, 141, 1); /* cor primária */
   --color-teal-600: rgba(29, 116, 128, 1);
   --color-teal-700: rgba(26, 104, 115, 1);
   --color-teal-800: rgba(41, 150, 161, 1);
-  --color-red-400: rgba(255, 84, 89, 1);
+  --color-red-400: rgba(255, 84, 89, 1); /* erro/alerta */
   --color-red-500: rgba(192, 21, 47, 1);
   --color-orange-400: rgba(230, 129, 97, 1);
   --color-orange-500: rgba(168, 75, 47, 1);
 
-  /* RGB versions for opacity control */
+  /* ---------- Versões RGB --------
+     Úteis quando queremos usar a mesma cor com diferentes opacidades,
+     por exemplo: background: rgba(var(--color-teal-500-rgb), 0.08);
+  */
   --color-brown-600-rgb: 94, 82, 64;
   --color-teal-500-rgb: 33, 128, 141;
   --color-slate-900-rgb: 19, 52, 59;
@@ -33,60 +39,63 @@
   --color-orange-500-rgb: 168, 75, 47;
   --color-orange-400-rgb: 230, 129, 97;
 
-  /* Background color tokens (Light Mode) */
-  --color-bg-1: rgba(59, 130, 246, 0.08); /* Light blue */
-  --color-bg-2: rgba(245, 158, 11, 0.08); /* Light yellow */
-  --color-bg-3: rgba(34, 197, 94, 0.08); /* Light green */
-  --color-bg-4: rgba(239, 68, 68, 0.08); /* Light red */
-  --color-bg-5: rgba(147, 51, 234, 0.08); /* Light purple */
-  --color-bg-6: rgba(249, 115, 22, 0.08); /* Light orange */
-  --color-bg-7: rgba(236, 72, 153, 0.08); /* Light pink */
-  --color-bg-8: rgba(6, 182, 212, 0.08); /* Light cyan */
+  /* ---------- Cores de fundo decorativas (modo claro) ---------- */
+  --color-bg-1: rgba(59, 130, 246, 0.08); /* azul leve */
+  --color-bg-2: rgba(245, 158, 11, 0.08); /* amarelo leve */
+  --color-bg-3: rgba(34, 197, 94, 0.08); /* verde leve */
+  --color-bg-4: rgba(239, 68, 68, 0.08); /* vermelho leve */
+  --color-bg-5: rgba(147, 51, 234, 0.08); /* roxo leve */
+  --color-bg-6: rgba(249, 115, 22, 0.08); /* laranja leve */
+  --color-bg-7: rgba(236, 72, 153, 0.08); /* rosa leve */
+  --color-bg-8: rgba(6, 182, 212, 0.08); /* ciano leve */
 
-  /* Semantic Color Tokens (Light Mode) */
-  --color-background: var(--color-cream-50);
-  --color-surface: var(--color-cream-100);
-  --color-text: var(--color-slate-900);
-  --color-text-secondary: var(--color-slate-500);
-  --color-primary: var(--color-teal-500);
+  /* ---------- Tokens semânticos (modo claro) ----------
+     Preferir usar essas variáveis nas regras (ex.: --color-background) em vez
+     das cores primárias diretas — facilita troca de tema.
+  */
+  --color-background: var(--color-cream-50); /* fundo da aplicação */
+  --color-surface: var(--color-cream-100); /* superfícies como cards */
+  --color-text: var(--color-slate-900); /* texto principal */
+  --color-text-secondary: var(--color-slate-500); /* texto secundário */
+  --color-primary: var(--color-teal-500); /* cor principal */
   --color-primary-hover: var(--color-teal-600);
   --color-primary-active: var(--color-teal-700);
-  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12); /* fundos neutros */
   --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
   --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
-  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-btn-primary-text: var(--color-cream-50);
+  --color-border: rgba(var(--color-brown-600-rgb), 0.2); /* bordas padrão */
+  --color-btn-primary-text: var(--color-cream-50); /* texto dos botões primários */
   --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
   --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
   --color-error: var(--color-red-500);
   --color-success: var(--color-teal-500);
   --color-warning: var(--color-orange-500);
   --color-info: var(--color-slate-500);
-  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
-  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
+  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4); /* anel de foco usado em acessibilidade */
+  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8); /* seta customizada para selects */
 
-  /* Common style patterns */
-  --focus-ring: 0 0 0 3px var(--color-focus-ring);
-  --focus-outline: 2px solid var(--color-primary);
-  --status-bg-opacity: 0.15;
-  --status-border-opacity: 0.25;
+  /* ---------- Padrões e utilitários ---------- */
+  --focus-ring: 0 0 0 3px var(--color-focus-ring); /* box-shadow do foco */
+  --focus-outline: 2px solid var(--color-primary); /* fallback de outline */
+  --status-bg-opacity: 0.15; /* opacidade padrão para badges de status */
+  --status-border-opacity: 0.25; /* opacidade padrão para bordas de status */
   --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
   --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
 
-  /* RGB versions for opacity control */
+  /* Versões rgb para usar com alfa quando necessário */
   --color-success-rgb: 33, 128, 141;
   --color-error-rgb: 192, 21, 47;
   --color-warning-rgb: 168, 75, 47;
   --color-info-rgb: 98, 108, 113;
 
-  /* Typography */
+  /* ---------- Tipografia ---------- */
   --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; /* fonte principal */
   --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo,
-    Monaco, Consolas, monospace;
+    Monaco, Consolas, monospace; /* fonte monospace para code */
   --font-size-xs: 11px;
   --font-size-sm: 12px;
-  --font-size-base: 14px;
+  --font-size-base: 14px; /* base do projeto */
   --font-size-md: 14px;
   --font-size-lg: 16px;
   --font-size-xl: 18px;
@@ -101,7 +110,7 @@
   --line-height-normal: 1.5;
   --letter-spacing-tight: -0.01em;
 
-  /* Spacing */
+  /* ---------- Espaçamento (uso consistente) ---------- */
   --space-0: 0;
   --space-1: 1px;
   --space-2: 2px;
@@ -115,14 +124,14 @@
   --space-24: 24px;
   --space-32: 32px;
 
-  /* Border Radius */
+  /* ---------- Bordas arredondadas ---------- */
   --radius-sm: 6px;
   --radius-base: 8px;
   --radius-md: 10px;
   --radius-lg: 12px;
   --radius-full: 9999px;
 
-  /* Shadows */
+  /* ---------- Sombras ---------- */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
@@ -132,19 +141,22 @@
   --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
     inset 0 -1px 0 rgba(0, 0, 0, 0.03);
 
-  /* Animation */
+  /* ---------- Transições/Animações ---------- */
   --duration-fast: 150ms;
   --duration-normal: 250ms;
   --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Layout */
+  /* ---------- Layout: limites do container ---------- */
   --container-sm: 640px;
   --container-md: 768px;
   --container-lg: 1024px;
   --container-xl: 1280px;
 }
 
-/* Dark mode colors */
+/* ===== Cores e tokens para modo escuro =====
+   Redefine variáveis de cor quando o sistema ou o usuário preferir tema escuro.
+   O navegador aplica automaticamente quando o usuário tem preferência por 'dark'.
+*/
 @media (prefers-color-scheme: dark) {
   :root {
     /* RGB versions for opacity control (Dark Mode) */
@@ -205,7 +217,10 @@
   }
 }
 
-/* Data attribute for manual theme switching */
+/* ===== Troca de tema manual via atributo =====
+  Permite forçar o tema escuro via atributo HTML: <html data-color-scheme="dark">.
+  Útil para toggles de tema controlados pela aplicação.
+*/
 [data-color-scheme="dark"] {
   /* RGB versions for opacity control (dark mode) */
   --color-gray-400-rgb: 119, 124, 124;
@@ -263,6 +278,10 @@
   --color-info-rgb: var(--color-gray-300-rgb);
 }
 
+/* ===== Variáveis para forçar modo claro via atributo =====
+   Define tokens quando a aplicação quer aplicar explicitamente o tema claro
+   usando <html data-color-scheme="light">.
+*/
 [data-color-scheme="light"] {
   /* RGB versions for opacity control (light mode) */
   --color-brown-600-rgb: 94, 82, 64;
@@ -297,7 +316,9 @@
   --color-info-rgb: var(--color-slate-500-rgb);
 }
 
-/* Base styles */
+/* ===== Estilos base =====
+  Defaults globais aplicados ao elemento <html> (tipografia, cores, box-sizing).
+*/
 html {
   font-size: var(--font-size-base);
   font-family: var(--font-family-base);
@@ -319,7 +340,9 @@ body {
   box-sizing: inherit;
 }
 
-/* Typography */
+/* ===== Tipografia =====
+  Configurações de headings (h1..h6) — use variáveis de fonte/tamanho para ajustar.
+*/
 h1,
 h2,
 h3,
@@ -390,7 +413,10 @@ pre code {
   padding: 0;
 }
 
-/* Buttons */
+/* ===== Botões =====
+  Regras base para botões. Variantes (btn--primary, btn--secondary, etc.)
+  herdam essas propriedades.
+*/
 .btn {
   display: inline-flex;
   align-items: center;
@@ -411,11 +437,15 @@ pre code {
   outline: none;
   box-shadow: var(--focus-ring);
 }
-
 .btn--primary {
   background: var(--color-primary);
   color: var(--color-btn-primary-text);
 }
+
+/* Variante: botão primário
+   - Usado para ações principais (ex.: salvar, enviar).
+   - Para alterar cor, ajuste --color-primary ou --color-btn-primary-text.
+*/
 
 .btn--primary:hover {
   background: var(--color-primary-hover);
@@ -430,6 +460,11 @@ pre code {
   color: var(--color-text);
 }
 
+/* Variante: botão secundário
+   - Fundo neutro, usado em ações secundárias ou para evitar competir com o primário.
+   - Ajuste --color-secondary para alterar o tom de fundo.
+*/
+
 .btn--secondary:hover {
   background: var(--color-secondary-hover);
 }
@@ -443,6 +478,11 @@ pre code {
   border: 1px solid var(--color-border);
   color: var(--color-text);
 }
+
+/* Variante: outline
+   - Botão com borda apenas; mantém fundo transparente.
+   - Boa opção quando precisa de menos peso visual.
+*/
 
 .btn--outline:hover {
   background: var(--color-secondary);
@@ -469,7 +509,13 @@ pre code {
   cursor: not-allowed;
 }
 
-/* Form elements */
+/* Nota: .btn--sm / .btn--lg / .btn--full-width são utilitários de tamanho.
+   - Usar as classes conforme necessário para responsividade e acessibilidade.
+*/
+
+/* ===== Elementos de formulário =====
+  Estilos padrão para inputs, textareas e selects (classe .form-control).
+*/
 .form-control {
   display: block;
   width: 100%;
@@ -483,6 +529,11 @@ pre code {
   transition: border-color var(--duration-fast) var(--ease-standard),
     box-shadow var(--duration-fast) var(--ease-standard);
 }
+
+/* Foco em inputs
+   - Quando o input recebe foco, aplicamos borda e outline para acessibilidade.
+   - Para reduzir intensidade visual, ajuste --focus-ring e --focus-outline.
+*/
 
 textarea.form-control {
   font-family: var(--font-family-base);
@@ -500,6 +551,11 @@ select.form-control {
   background-size: 16px;
   padding-right: var(--space-32);
 }
+
+/* Select customizado
+   - Usa SVG inlined como caret para controle visual.
+   - No modo escuro usamos --select-caret-dark, no claro usamos --select-caret-light.
+*/
 
 /* Add a dark mode specific caret */
 @media (prefers-color-scheme: dark) {
@@ -533,7 +589,9 @@ select.form-control {
   margin-bottom: var(--space-16);
 }
 
-/* Card component */
+/* ===== Componente Card =====
+  Estilo genérico para cartões (cards). Utilize .card__header/.card__body/.card__footer.
+*/
 .card {
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
@@ -557,7 +615,14 @@ select.form-control {
   border-bottom: 1px solid var(--color-card-border-inner);
 }
 
-/* Status indicators - simplified with CSS variables */
+/* Card: estrutura básica
+   - Use .card__header/.card__body/.card__footer para separar áreas.
+   - Ajuste --color-card-border para mudar a cor da borda dos cards.
+*/
+
+/* ===== Indicadores de status =====
+  Badges para estados (sucesso/erro/aviso/info) usando variáveis semânticas.
+*/
 .status {
   display: inline-flex;
   align-items: center;
@@ -566,6 +631,11 @@ select.form-control {
   font-weight: var(--font-weight-medium);
   font-size: var(--font-size-sm);
 }
+
+/* Status badges
+   - classes: .status--success, .status--error, .status--warning, .status--info
+   - Usam opacidades e variáveis rgb para criar background + borda legíveis.
+*/
 
 .status--success {
   background-color: rgba(
@@ -607,7 +677,9 @@ select.form-control {
     rgba(var(--color-info-rgb, 98, 108, 113), var(--status-border-opacity));
 }
 
-/* Container layout */
+/* ===== Container responsivo =====
+  Centraliza o conteúdo e aplica padding lateral. Breakpoints controlam a largura.
+*/
 .container {
   width: 100%;
   margin-right: auto;
@@ -637,7 +709,14 @@ select.form-control {
   }
 }
 
-/* Utility classes */
+/* Observação sobre container
+   - Centraliza o conteúdo e aplica padding lateral.
+   - Os breakpoints controlam a largura máxima. Alterar --container-* ajusta os pontos.
+*/
+
+/* ===== Classes utilitárias =====
+  Pequenas helpers para layout (flex, gaps, margin/padding). Úteis para ajustes rápidos.
+*/
 .flex {
   display: flex;
 }
@@ -662,6 +741,11 @@ select.form-control {
 .gap-16 {
   gap: var(--space-16);
 }
+
+/* Utilitários de layout
+   - Classes pequenas para facilitar layouts sem criar CSS específico.
+   
+*/
 
 .m-0 {
   margin: 0;
@@ -708,7 +792,10 @@ select.form-control {
   display: none;
 }
 
-/* Accessibility */
+/* ===== Acessibilidade =====
+  - .sr-only esconde visualmente conteúdo mas mantém disponível para leitores de tela.
+  - :focus-visible aplica outlines apenas para navegação por teclado.
+*/
 .sr-only {
   position: absolute;
   width: 1px;
@@ -726,7 +813,14 @@ select.form-control {
   outline-offset: 2px;
 }
 
-/* Dark mode specifics */
+/* Acessibilidade: foco e conteúdo apenas para leitores de tela
+   - .sr-only: deixa o conteúdo disponível para leitores de tela mas oculto visualmente.
+   - :focus-visible: aplica um outline visível apenas para usuários que navegam via teclado.
+*/
+
+/* ===== Ajustes específicos para tema escuro =====
+   Correções visuais aplicadas quando o tema está forçado para 'dark'.
+*/
 [data-color-scheme="dark"] .btn--outline {
   border: 1px solid var(--color-border-secondary);
 }
@@ -737,7 +831,9 @@ select.form-control {
     format('woff2');
 }
 
-/* END PERPLEXITY DESIGN SYSTEM */
+/* ===== FIM DO SISTEMA DE DESIGN =====
+  Blocos acima fazem parte do design system utilizado no projeto.
+*/
 :root {
   /* Using design system colors - mapping green theme to teal */
   --primary: var(--color-primary);
@@ -797,13 +893,26 @@ body {
   overflow-x: hidden;
 }
 
+/* Estrutura da aplicação
+   - .app-container limita largura e aplica padding geral.
+   - Header, cards e grids usam variações dessas variáveis para manter consistência.
+   - Para trocar aparência global, ajuste as variáveis no :root acima.
+*/
+
+/* Header e container principal
+   - .app-container centraliza o layout principal da aplicação e define padding geral.
+   - header contém título e ações globais (ex.: botão novo, toggle de tema).
+*/
 .app-container {
   max-width: var(--container-xl);
   margin: 0 auto;
   padding: var(--space-24);
   min-height: 100vh;
 }
-
+/* Cabeçalho (header)
+   - Área superior da aplicação: normalmente contém título, ações principais e navegação.
+   - Mantém fundo, padding e borda para destacar do conteúdo.
+*/
 header {
   background: var(--bg-white);
   padding: var(--space-24);
@@ -817,7 +926,10 @@ header {
   flex-wrap: wrap;
   border: 1px solid var(--color-card-border);
 }
-
+/* Título no header
+   - Use header h1 para o título global da página/aplicação.
+   - Ajustar a variável --primary altera a cor de destaque aqui.
+*/
 header h1 {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
@@ -827,6 +939,10 @@ header h1 {
   gap: var(--space-8);
 }
 
+/* Botões de nível de aplicação
+   - Esta definição (.btn) é usada na interface (ex.: botões no header).
+   - Difere de .btn--* (variantes do design system); ambas coexistem para conveniência.
+*/
 .btn {
   padding: var(--space-10) var(--space-20);
   border-radius: var(--radius-md);
@@ -842,6 +958,10 @@ header h1 {
   text-decoration: none;
 }
 
+/* Botão primário (estilo específico usado no header)
+   - Usa um gradiente para maior destaque visual em ações principais.
+   - Para alterar, prefira ajustar as variáveis de tema (--primary, --leaf).
+*/
 .btn-primary {
   background: linear-gradient(135deg, var(--primary) 0%, var(--leaf) 100%);
   color: var(--color-btn-primary-text);
@@ -854,6 +974,9 @@ header h1 {
   background: linear-gradient(135deg, var(--primary-dark) 0%, var(--forest) 100%);
 }
 
+/* Botão secundário (estilo leve)
+   - Usado para ações secundárias no header e em ferramentas de utilidade.
+*/
 .btn-secondary {
   background: var(--color-surface);
   color: var(--color-text);
@@ -906,6 +1029,11 @@ header h1 {
   margin-top: var(--space-24);
 }
 
+/* Grid de plantas
+   - Usa auto-fill com minmax para responsividade: cada card tem no mínimo 320px.
+   - Ajuste o minmax para permitir cards menores ou maiores por largura de coluna.
+*/
+
 .plant-card {
   background: var(--bg-white);
   border-radius: var(--radius-lg);
@@ -918,6 +1046,11 @@ header h1 {
   hyphens: auto;
   min-width: 0;
 }
+
+/* Card de planta
+   - Estrutura principal para cada planta na lista.
+   - hover eleva sombra e altera borda para destacar (ver .plant-card:hover).
+*/
 
 .plant-card:hover {
   box-shadow: var(--shadow-green);
@@ -957,6 +1090,10 @@ header h1 {
   flex-shrink: 0;
   box-shadow: var(--shadow-sm);
 }
+
+/* Badge pequena para destaque (ex.: espécie, status)
+   - Use .plant-badge para rótulos curtos. Mantém texto sem quebra por causa do white-space.
+*/
 
 .plant-notes {
   color: var(--color-text-secondary);
@@ -1002,6 +1139,11 @@ header h1 {
   gap: var(--space-4);
 }
 
+/* Ações do card
+   - .plant-actions organiza botões (ver .btn-action-* para variantes).
+   - Os botões usam flex:1 para dividir igualmente o espaço.
+*/
+
 .btn-action-view {
   background: var(--bg-white);
   color: var(--primary);
@@ -1038,6 +1180,13 @@ header h1 {
   transform: translateY(-2px);
 }
 
+/* Botões de ação: view / edit / delete
+   - .btn-action-view: cor primária para visualizar.
+   - .btn-action-edit: cor de destaque para editar.
+   - .btn-action-delete: vermelho para ações destrutivas.
+   - Para ajustar prioridade visual, altere cores nas variáveis de tema.
+*/
+
 .empty-state {
   text-align: center;
   padding: var(--space-32) var(--space-24);
@@ -1050,10 +1199,20 @@ header h1 {
   animation: float 3s ease-in-out infinite;
 }
 
+/* Ícone do estado vazio
+   - elemento visual grande usado em páginas sem conteúdo.
+   - usa a animação 'float' para um efeito sutil de movimento.
+*/
+
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
 }
+
+/* Animação 'float'
+   - Animação simples usada para ícones decorativos (ex.: .empty-icon, .auth-logo).
+   - Ajustar a duração na propriedade animation aplicada ao elemento.
+*/
 
 .empty-state h3 {
   font-size: var(--font-size-xl);
@@ -1066,6 +1225,11 @@ header h1 {
   margin-bottom: var(--space-24);
   color: var(--color-text-secondary);
 }
+
+/* Estado vazio (empty state)
+   - Use esta estrutura quando não houver conteúdo para mostrar.
+   - Mantém o usuário informado e pode conter CTA (call-to-action).
+*/
 
 .form-group {
   margin-bottom: var(--space-24);
@@ -1148,6 +1312,11 @@ input[type="file"] {
   background: var(--color-surface);
 }
 
+/* Input de arquivo estilizado
+   - input[type="file"] é escondido e a label estilizada atua como trigger.
+   - Mantém acessibilidade: associe label ao input via 'for' e 'id'.
+*/
+
 .auth-container {
   min-height: 100vh;
   display: flex;
@@ -1196,6 +1365,11 @@ input[type="file"] {
   color: var(--color-text-secondary);
   font-size: var(--font-size-md);
 }
+
+/* Área de autenticação (login/register)
+   - .auth-card centraliza formulário, title e possíveis mensagens de erro.
+   - .auth-error usa variáveis de status (background + border) para consistência.
+*/
 
 .auth-form {
   margin-bottom: var(--space-24);
@@ -1270,6 +1444,11 @@ input[type="file"] {
   align-items: center;
 }
 
+/* Campo de senha com botão de alternar visibilidade
+   - .password-input-wrapper posiciona o botão dentro do campo.
+   - .btn-toggle-password é o botão que mostra/oculta a senha (JS controla comportamento).
+*/
+
 .password-input-wrapper .form-control {
   padding-right: var(--space-32);
 }
@@ -1287,6 +1466,10 @@ input[type="file"] {
   justify-content: center;
   transition: transform var(--duration-fast) var(--ease-standard);
 }
+
+/* Botão que alterna visibilidade da senha
+   - Este botão é puramente visual no CSS; a lógica de mostrar/ocultar fica no JS.
+*/
 
 .btn-toggle-password:hover {
   transform: scale(1.1);
@@ -1315,7 +1498,16 @@ input[type="file"] {
   box-shadow: var(--focus-ring);
 }
 
+/* Toggle de tema (botão)
+   - Geralmente aciona mudança de atributo data-color-scheme no <html> via JS.
+   - Mantém foco acessível com box-shadow para navegação por teclado.
+*/
+
 @media (max-width: 768px) {
+  /* ===== Ajustes responsivos (tablet) =====
+     - Reduz padding e adapta layout do header e grids para telas menores.
+     
+  */
   .app-container {
     padding: var(--space-16);
   }
@@ -1344,6 +1536,10 @@ input[type="file"] {
 }
 
 @media (max-width: 480px) {
+  /* ===== Ajustes responsivos (mobile) =====
+     - Ajustes finos para telas pequenas: menor padding, menor tipografia e empilhamento
+       de ações
+  */
   .app-container {
     padding: var(--space-12);
   }
