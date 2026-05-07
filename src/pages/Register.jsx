@@ -40,8 +40,24 @@ export default function Register() {
       const data = await response.json()
 
       if (response.ok) {
-        alert(' Conta criada com sucesso! Faça login.')
-        navigate('/login')
+        // Tenta fazer o login automático com as credenciais recém criadas
+        try {
+          const loginResponse = await fetch('https://plantae-backend-g2kc.onrender.com/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password })
+          })
+          const loginData = await loginResponse.json()
+          
+          if (loginData.access_token) {
+            localStorage.setItem('token', loginData.access_token)
+            navigate('/dashboard')
+          } else {
+            navigate('/login') // Fallback caso o auto-login falhe
+          }
+        } catch (loginErr) {
+          navigate('/login')
+        }
       } else {
         setError(data.msg || 'Erro ao criar conta')
       }
