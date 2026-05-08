@@ -111,7 +111,7 @@ export default function Login() {
             className="btn btn-primary btn-auth"
             disabled={loading}
           >
-            {loading ? '⏳ Entrando...' : '🚀 Entrar'}
+            {loading ? ' Entrando...' : ' Entrar'}
           </button>
         </form>
 
@@ -121,7 +121,7 @@ export default function Login() {
             className="btn btn-secondary"
             onClick={() => navigate('/register')}
           >
-            📝 Criar conta
+             Criar conta
           </button>
         </div>
       </div>
